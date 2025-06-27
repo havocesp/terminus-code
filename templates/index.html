@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Terminus</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="language-flags">
+                                <img src="https://flagcdn.com/w20/es.png" alt="Español" class="flag-icon active" data-lang="es" title="Español">
+                                <img src="https://flagcdn.com/w20/gb.png" alt="English" class="flag-icon" data-lang="en" title="English">
+                                <img src="https://flagcdn.com/w20/pt.png" alt="Português" class="flag-icon" data-lang="pt" title="Português">
+                                <img src="https://flagcdn.com/w20/it.png" alt="Italiano" class="flag-icon" data-lang="it" title="Italiano">
+                                <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="flag-icon" data-lang="fr" title="Français">
+                            </div>
+                            <h2 class="card-title mb-0 text-center flex-grow-1" id="mainTitle">Calculadora Terminus</h2>
+                            <div class="voice-controls">
+                                <button type="button" class="btn btn-sm btn-outline-light" id="voiceButton" title="Comando de voz (Alt+V)">
+                                    🎤
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-light" id="speakButton" title="Leer resultados (Alt+S)">
+                                    🔊
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-warning" id="testSpeechButton" title="Probar voz">
+                                    🔊🧪
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Symbol Selection Interface -->
+                        <div class="mb-4">
+                            <h5 class="mb-3 text-center" id="instructionText">Selecciona variable y su símbolo:</h5>
+                            
+                            <!-- Variable Selection Buttons -->
+                            <div class="variable-selection mb-4">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-info variable-btn active" data-variable="X" tabindex="1" accesskey="1">X</button>
+                                    <button type="button" class="btn btn-outline-success variable-btn" data-variable="Y" tabindex="2" accesskey="2">Y</button>
+                                    <button type="button" class="btn btn-outline-danger variable-btn" data-variable="Z" tabindex="3" accesskey="3">Z</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Symbol Grid -->
+                            <div class="symbol-grid">
+                                <div class="symbol-item" data-value="0" data-symbol="1" tabindex="4" accesskey="4">
+                                    <img src="{{ url_for('static', filename='images/symbol1.svg') }}" alt="Symbol 1" class="symbol-image">
+                                </div>
+                                <div class="symbol-item" data-value="10" data-symbol="2" tabindex="5" accesskey="5">
+                                    <img src="{{ url_for('static', filename='images/symbol2.svg') }}" alt="Symbol 2" class="symbol-image">
+                                </div>
+                                <div class="symbol-item" data-value="11" data-symbol="3" tabindex="6" accesskey="6">
+                                    <img src="{{ url_for('static', filename='images/symbol3.svg') }}" alt="Symbol 3" class="symbol-image">
+                                </div>
+                                <div class="symbol-item" data-value="20" data-symbol="4" tabindex="7" accesskey="7">
+                                    <img src="{{ url_for('static', filename='images/symbol4.svg') }}" alt="Symbol 4" class="symbol-image">
+                                </div>
+                                <div class="symbol-item" data-value="21" data-symbol="5" tabindex="8" accesskey="8">
+                                    <img src="{{ url_for('static', filename='images/symbol5.svg') }}" alt="Symbol 5" class="symbol-image">
+                                </div>
+                                <div class="symbol-item" data-value="22" data-symbol="6" tabindex="9" accesskey="9">
+                                    <img src="{{ url_for('static', filename='images/symbol6.svg') }}" alt="Symbol 6" class="symbol-image">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hidden form inputs -->
+                        <form id="calculatorForm" style="display: none;">
+                            <input type="hidden" id="inputX" name="x" value="">
+                            <input type="hidden" id="inputY" name="y" value="">
+                            <input type="hidden" id="inputZ" name="z" value="">
+                        </form>
+
+                        <!-- Error Messages -->
+                        <div id="errorMessages" class="alert alert-danger mt-3 d-none">
+                            <ul class="mb-0" id="errorList"></ul>
+                        </div>
+                        
+                        <!-- Results Section -->
+                        <div id="resultsSection" class="mt-4 d-none">
+                            <h4 class="mb-3" id="resultsTitle">Resultados:</h4>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="result-box info">
+                                        <div class="result-value" id="result1">-</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="result-box success">
+                                        <div class="result-value" id="result2">-</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="result-box danger">
+                                        <div class="result-value" id="result3">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reset Button -->
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-secondary" id="resetButton" tabindex="10" accesskey="r">Reiniciar</button>
+                        </div>
+                        
+                        <!-- Voice Status -->
+                        <div id="voiceStatus" class="text-center mt-2 d-none">
+                            <small class="text-muted" id="voiceStatusText">Escuchando...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
