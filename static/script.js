@@ -126,18 +126,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateVariableButtonState(variable, value) {
         const btn = document.querySelector(`[data-variable="${variable}"]`);
-        if (btn && variableBtns) {
+        if (btn) {
             // Reset all buttons
             variableBtns.forEach(b => {
-                if (b) {
-                    b.classList.remove('active');
-                    if (selectedValues[b.dataset.variable] !== null) {
-                        b.classList.add('selected');
-                        b.textContent = `${b.dataset.variable}: ${selectedValues[b.dataset.variable]}`;
-                    } else {
-                        b.classList.remove('selected');
-                        b.textContent = b.dataset.variable;
-                    }
+                b.classList.remove('active');
+                if (selectedValues[b.dataset.variable] !== null) {
+                    b.classList.add('selected');
+                    b.textContent = `${b.dataset.variable}: ${selectedValues[b.dataset.variable]}`;
+                } else {
+                    b.classList.remove('selected');
+                    b.textContent = b.dataset.variable;
                 }
             });
             
@@ -147,9 +145,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateHiddenInputs() {
-        if (inputX) inputX.value = selectedValues.X || '';
-        if (inputY) inputY.value = selectedValues.Y || '';
-        if (inputZ) inputZ.value = selectedValues.Z || '';
+        inputX.value = selectedValues.X || '';
+        inputY.value = selectedValues.Y || '';
+        inputZ.value = selectedValues.Z || '';
     }
     
     function moveToNextVariable() {
@@ -169,26 +167,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showError(messages) {
-        if (errorList) {
-            errorList.innerHTML = '';
-            messages.forEach(message => {
-                const li = document.createElement('li');
-                li.textContent = message;
-                errorList.appendChild(li);
-            });
-        }
-        if (errorMessages) errorMessages.classList.remove('d-none');
+        errorList.innerHTML = '';
+        messages.forEach(message => {
+            const li = document.createElement('li');
+            li.textContent = message;
+            errorList.appendChild(li);
+        });
+        errorMessages.classList.remove('d-none');
     }
     
     function hideError() {
-        if (errorMessages) errorMessages.classList.add('d-none');
+        errorMessages.classList.add('d-none');
     }
     
     function showResults(results) {
-        if (result1) result1.textContent = results.value1;
-        if (result2) result2.textContent = results.value2;
-        if (result3) result3.textContent = results.value3;
-        if (resultsSection) resultsSection.classList.remove('d-none');
+        result1.textContent = results.value1;
+        result2.textContent = results.value2;
+        result3.textContent = results.value3;
+        resultsSection.classList.remove('d-none');
         hideError();
     }
     
@@ -221,76 +217,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Reset button handler
-    if (resetButton) {
-        resetButton.addEventListener('click', function() {
-            // Reset selected values
-            selectedValues = { X: null, Y: null, Z: null };
-            currentVariable = 'X';
-            
-            // Reset variable buttons
-            if (variableBtns) {
-                variableBtns.forEach(btn => {
-                    if (btn) {
-                        btn.classList.remove('selected');
-                        btn.textContent = btn.dataset.variable;
-                        if (btn.dataset.variable === 'X') {
-                            btn.classList.add('active');
-                        } else {
-                            btn.classList.remove('active');
-                        }
-                    }
-                });
+    resetButton.addEventListener('click', function() {
+        // Reset selected values
+        selectedValues = { X: null, Y: null, Z: null };
+        currentVariable = 'X';
+        
+        // Reset variable buttons
+        variableBtns.forEach(btn => {
+            btn.classList.remove('selected');
+            btn.textContent = btn.dataset.variable;
+            if (btn.dataset.variable === 'X') {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
             }
-            
-            // Reset hidden inputs
-            if (inputX) inputX.value = '';
-            if (inputY) inputY.value = '';
-            if (inputZ) inputZ.value = '';
-            
-            // Hide results and errors
-            if (resultsSection) resultsSection.classList.add('d-none');
-            hideError();
-            
-            // Reset result values
-            if (result1) result1.textContent = '-';
-            if (result2) result2.textContent = '-';
-            if (result3) result3.textContent = '-';
         });
-    }
+        
+        // Reset hidden inputs
+        inputX.value = '';
+        inputY.value = '';
+        inputZ.value = '';
+        
+        // Hide results and errors
+        resultsSection.classList.add('d-none');
+        hideError();
+        
+        // Reset result values
+        result1.textContent = '-';
+        result2.textContent = '-';
+        result3.textContent = '-';
+    });
     
     // Language switching
-    if (flagIcons) {
-        flagIcons.forEach(flag => {
-            if (flag) {
-                flag.addEventListener('click', function() {
-                    const lang = this.dataset.lang;
-                    switchLanguage(lang);
-                });
-            }
+    flagIcons.forEach(flag => {
+        flag.addEventListener('click', function() {
+            const lang = this.dataset.lang;
+            switchLanguage(lang);
         });
-    }
+    });
     
     function switchLanguage(lang) {
         currentLanguage = lang;
         
         // Update active flag
-        if (flagIcons) {
-            flagIcons.forEach(flag => {
-                if (flag) flag.classList.toggle('active', flag.dataset.lang === lang);
-            });
-        }
+        flagIcons.forEach(flag => {
+            flag.classList.toggle('active', flag.dataset.lang === lang);
+        });
         
         // Update text content
         const t = translations[lang];
-        if (mainTitle) mainTitle.textContent = t.title;
-        if (instructionText) instructionText.textContent = t.instruction;
-        if (resultsTitle) resultsTitle.textContent = t.results;
-        if (resetButton) resetButton.textContent = t.reset;
-        if (voiceStatusText) voiceStatusText.textContent = t.listening;
+        mainTitle.textContent = t.title;
+        instructionText.textContent = t.instruction;
+        resultsTitle.textContent = t.results;
+        resetButton.textContent = t.reset;
+        voiceStatusText.textContent = t.listening;
         
         // Update button titles
-        if (voiceButton) voiceButton.title = t.voiceHelp + ' (Alt+V)';
-        if (speakButton) speakButton.title = 'Leer resultados (Alt+S)';
+        voiceButton.title = t.voiceHelp + ' (Alt+V)';
+        speakButton.title = 'Leer resultados (Alt+S)';
     }
     
     // Voice recognition setup
@@ -304,21 +288,17 @@ document.addEventListener('DOMContentLoaded', function() {
             
             recognition.onstart = function() {
                 isListening = true;
-                if (voiceStatus) voiceStatus.classList.remove('d-none');
-                if (voiceButton) {
-                    voiceButton.classList.add('btn-danger');
-                    voiceButton.classList.remove('btn-outline-light');
-                }
+                voiceStatus.classList.remove('d-none');
+                voiceButton.classList.add('btn-danger');
+                voiceButton.classList.remove('btn-outline-light');
                 console.log('Voice recognition started');
             };
             
             recognition.onend = function() {
                 isListening = false;
-                if (voiceStatus) voiceStatus.classList.add('d-none');
-                if (voiceButton) {
-                    voiceButton.classList.remove('btn-danger');
-                    voiceButton.classList.add('btn-outline-light');
-                }
+                voiceStatus.classList.add('d-none');
+                voiceButton.classList.remove('btn-danger');
+                voiceButton.classList.add('btn-outline-light');
                 console.log('Voice recognition ended');
             };
             
@@ -331,11 +311,9 @@ document.addEventListener('DOMContentLoaded', function() {
             recognition.onerror = function(event) {
                 console.error('Speech recognition error:', event.error);
                 isListening = false;
-                if (voiceStatus) voiceStatus.classList.add('d-none');
-                if (voiceButton) {
-                    voiceButton.classList.remove('btn-danger');
-                    voiceButton.classList.add('btn-outline-light');
-                }
+                voiceStatus.classList.add('d-none');
+                voiceButton.classList.remove('btn-danger');
+                voiceButton.classList.add('btn-outline-light');
                 
                 // Show user-friendly error message
                 if (event.error === 'network') {
@@ -395,16 +373,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateActiveVariableButton(variable) {
-        if (variableBtns) {
-            variableBtns.forEach(btn => {
-                if (btn) {
-                    btn.classList.remove('active');
-                    if (btn.dataset.variable === variable) {
-                        btn.classList.add('active');
-                    }
-                }
-            });
-        }
+        variableBtns.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.variable === variable) {
+                btn.classList.add('active');
+            }
+        });
     }
     
     // Audio notification
@@ -487,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Voice button handlers with null checks
+    // Voice button handlers
     if (voiceButton) {
         voiceButton.addEventListener('click', function() {
             if (recognition) {
@@ -505,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
         speakButton.addEventListener('click', speakResults);
     }
     
-    // Test speech button with null check
+    // Test speech button
     if (testSpeechButton) {
         testSpeechButton.addEventListener('click', function() {
             const testMessage = currentLanguage === 'es' ? 'Probando texto a voz' : 

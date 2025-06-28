@@ -6,22 +6,22 @@ This is a calculator application for the Black Ops 6 Terminus Zombies Map code. 
 
 ## System Architecture
 
-Flask-based web application with dynamic JavaScript interface:
+The system architecture is not yet defined as the project is in its initial setup phase. Based on the project description, this will likely be a simple calculator application that could be implemented as:
 
-- **Backend**: Flask server (Python) serving HTML templates and handling calculations
-- **Frontend**: Responsive HTML5 interface with Bootstrap styling
-- **JavaScript**: Interactive symbol selection, multi-language support, voice recognition
-- **Calculations**: Server-side mathematical processing with modulo constraints (0-59 range)
-- **Features**: Real-time results, keyboard shortcuts, accessibility support
+- A web-based calculator using HTML, CSS, and JavaScript
+- A standalone desktop application
+- A mobile-friendly web app
+
+The architecture will be determined based on the specific requirements for the Terminus map code calculations.
 
 ## Key Components
 
-1. **Flask Application** (`app.py`) - Main server with calculation endpoints
-2. **Calculator Interface** (`templates/index.html`) - Multi-language symbol selection UI
-3. **JavaScript Controller** (`static/script.js`) - DOM manipulation, voice recognition, language switching
-4. **Calculation Logic** - Mathematical formulas with modulo operations for 0-59 range
-5. **Symbol Assets** (`static/images/`) - SVG symbols for visual selection
-6. **Responsive Styling** (`static/style.css`) - Bootstrap-based responsive design
+Currently, no key components are implemented. The following components are anticipated based on the project purpose:
+
+1. **Calculator Interface** - User interface for inputting values and displaying results
+2. **Calculation Logic** - Core algorithms for processing Terminus map codes
+3. **Input Validation** - Ensuring user inputs are valid for the calculations
+4. **Results Display** - Formatted output of calculated codes or solutions
 
 ## Data Flow
 
@@ -54,12 +54,6 @@ Deployment strategy is not yet defined. Options may include:
 ```
 Changelog:
 - June 27, 2025. Initial setup
-- June 27, 2025. Fixed JavaScript DOM errors and Flask server startup issues
-  - Added null checks for DOM element access
-  - Enhanced error handling for speech recognition
-  - Improved variable button state management
-  - Fixed language switching functionality
-  - Server now starts correctly and responds to requests
 ```
 
 ## User Preferences
