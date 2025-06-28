@@ -1,12 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    const calculatorForm = document.getElementById('calculatorForm');
-    const inputX = document.getElementById('inputX');
-    const inputY = document.getElementById('inputY');
-    const inputZ = document.getElementById('inputZ');
+    const form = document.getElementById('calculatorForm');
     const errorMessages = document.getElementById('errorMessages');
     const errorList = document.getElementById('errorList');
     const resultsSection = document.getElementById('resultsSection');
+    
+    // Hidden input elements
+    const inputX = document.getElementById('inputX');
+    const inputY = document.getElementById('inputY');
+    const inputZ = document.getElementById('inputZ');
+    
+    // Result elements
     const result1 = document.getElementById('result1');
     const result2 = document.getElementById('result2');
     const result3 = document.getElementById('result3');
@@ -85,63 +88,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
-    // Variable button functionality
+    // Variable button handlers
     variableBtns.forEach(btn => {
         btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            variableBtns.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            // Update current variable
             currentVariable = this.dataset.variable;
-            updateVariableButtonState(currentVariable, selectedValues[currentVariable]);
-            updateHiddenInputs();
         });
     });
     
-    // Symbol selection functionality
+    // Symbol selection handlers
     symbolItems.forEach(item => {
         item.addEventListener('click', function() {
-            if (currentVariable) {
-                const value = parseInt(this.dataset.value);
-                
-                // Add visual feedback
-                this.classList.add('selecting');
-                setTimeout(() => this.classList.remove('selecting'), 300);
-                
-                // Update selected values
-                selectedValues[currentVariable] = value;
-                
-                // Update variable button to show selected symbol
-                updateVariableButtonState(currentVariable, value);
-                
-                // Update hidden inputs
-                updateHiddenInputs();
-                
-                // Move to next variable if current one is set
-                moveToNextVariable();
-                
-                // Calculate results if all variables are set
-                if (selectedValues.X !== null && selectedValues.Y !== null && selectedValues.Z !== null) {
-                    calculateResults();
-                }
+            const value = parseInt(this.dataset.value);
+            const symbolNumber = this.dataset.symbol;
+            
+            // Add selection animation
+            this.classList.add('selecting');
+            setTimeout(() => {
+                this.classList.remove('selecting');
+            }, 300);
+            
+            // Update the selected values
+            selectedValues[currentVariable] = value;
+            
+            // Update the variable button to show it's been selected
+            updateVariableButtonState(currentVariable, value);
+            
+            // Update hidden inputs
+            updateHiddenInputs();
+            
+            // Auto-calculate if all values are selected
+            if (selectedValues.X !== null && selectedValues.Y !== null && selectedValues.Z !== null) {
+                calculateResults();
             }
+            
+            // Move to next variable automatically
+            moveToNextVariable();
         });
     });
     
     function updateVariableButtonState(variable, value) {
-        const btn = document.querySelector(`[data-variable="${variable}"]`);
-        if (btn) {
-            // Reset all buttons
-            variableBtns.forEach(b => {
-                b.classList.remove('active');
-                if (selectedValues[b.dataset.variable] !== null) {
-                    b.classList.add('selected');
-                    b.textContent = `${b.dataset.variable}: ${selectedValues[b.dataset.variable]}`;
-                } else {
-                    b.classList.remove('selected');
-                    b.textContent = b.dataset.variable;
-                }
-            });
-            
-            // Set current as active
-            btn.classList.add('active');
-        }
+        // Find the variable button and update its text to show the selected value
+        variableBtns.forEach(btn => {
+            if (btn.dataset.variable === variable) {
+                btn.textContent = `${variable}: ${value}`;
+                btn.classList.add('selected');
+            }
+        });
     }
     
     function updateHiddenInputs() {
@@ -151,16 +148,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function moveToNextVariable() {
-        const variables = ['X', 'Y', 'Z'];
-        const currentIndex = variables.indexOf(currentVariable);
+        const order = ['X', 'Y', 'Z'];
+        const currentIndex = order.indexOf(currentVariable);
         
-        // Find next unset variable
-        for (let i = 1; i < variables.length; i++) {
-            const nextIndex = (currentIndex + i) % variables.length;
-            const nextVariable = variables[nextIndex];
-            if (selectedValues[nextVariable] === null) {
-                currentVariable = nextVariable;
-                updateVariableButtonState(currentVariable, selectedValues[currentVariable]);
+        // Find next unselected variable
+        for (let i = 1; i < order.length; i++) {
+            const nextIndex = (currentIndex + i) % order.length;
+            const nextVar = order[nextIndex];
+            
+            if (selectedValues[nextVar] === null) {
+                // Update active button
+                variableBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.variable === nextVar) {
+                        btn.classList.add('active');
+                    }
+                });
+                currentVariable = nextVar;
                 return;
             }
         }
@@ -174,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
             errorList.appendChild(li);
         });
         errorMessages.classList.remove('d-none');
+        resultsSection.classList.add('d-none');
     }
     
     function hideError() {
@@ -181,33 +186,59 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showResults(results) {
+        hideError();
+        
+        // Update result values
         result1.textContent = results.value1;
         result2.textContent = results.value2;
         result3.textContent = results.value3;
+        
+        // Show results section with animation
         resultsSection.classList.remove('d-none');
-        hideError();
+        
+        // Add animation to result cards
+        const resultCards = document.querySelectorAll('.result-card');
+        resultCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.classList.add('animate');
+            }, index * 100);
+        });
+        
+        // Remove animation class after animation completes
+        setTimeout(() => {
+            resultCards.forEach(card => {
+                card.classList.remove('animate');
+            });
+        }, 1000);
     }
     
     function calculateResults() {
-        const data = {
+        // Get form data from selected values
+        const formData = {
             x: selectedValues.X,
             y: selectedValues.Y,
             z: selectedValues.Z
         };
         
+        // Validate that all values are selected
+        if (formData.x === null || formData.y === null || formData.z === null) {
+            return;
+        }
+        
+        // Send AJAX request
         fetch('/calculate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(formData)
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 showResults(data.results);
             } else {
-                showError([data.error || 'Calculation error occurred']);
+                showError(data.errors || ['An error occurred']);
             }
         })
         .catch(error => {
@@ -462,58 +493,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Voice button handlers
-    if (voiceButton) {
-        voiceButton.addEventListener('click', function() {
-            if (recognition) {
-                if (isListening) {
-                    recognition.stop();
-                } else {
-                    recognition.lang = getVoiceLanguage(currentLanguage);
-                    recognition.start();
-                }
+    voiceButton.addEventListener('click', function() {
+        if (recognition) {
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.lang = getVoiceLanguage(currentLanguage);
+                recognition.start();
             }
-        });
-    }
+        }
+    });
     
-    if (speakButton) {
-        speakButton.addEventListener('click', speakResults);
-    }
+    speakButton.addEventListener('click', speakResults);
     
     // Test speech button
-    if (testSpeechButton) {
-        testSpeechButton.addEventListener('click', function() {
-            const testMessage = currentLanguage === 'es' ? 'Probando texto a voz' : 
-                               currentLanguage === 'en' ? 'Testing text to speech' :
-                               currentLanguage === 'pt' ? 'Testando texto para fala' :
-                               currentLanguage === 'it' ? 'Test da testo a voce' :
-                               'Test de synthèse vocale';
-            
-            if ('speechSynthesis' in window) {
-                speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(testMessage);
-                utterance.lang = getVoiceLanguage(currentLanguage);
-                utterance.rate = 0.8;
-                utterance.volume = 0.9;
-                speechSynthesis.speak(utterance);
-                console.log('Test speech:', testMessage);
-            } else {
-                console.log('Speech synthesis not available');
-            }
-        });
-    }
+    testSpeechButton.addEventListener('click', function() {
+        const testMessage = currentLanguage === 'es' ? 'Probando texto a voz' : 
+                           currentLanguage === 'en' ? 'Testing text to speech' :
+                           currentLanguage === 'pt' ? 'Testando texto para fala' :
+                           currentLanguage === 'it' ? 'Test da testo a voce' :
+                           'Test de synthèse vocale';
+        
+        if ('speechSynthesis' in window) {
+            speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(testMessage);
+            utterance.lang = getVoiceLanguage(currentLanguage);
+            utterance.rate = 0.8;
+            utterance.volume = 0.9;
+            speechSynthesis.speak(utterance);
+            console.log('Test speech:', testMessage);
+        } else {
+            console.log('Speech synthesis not available');
+        }
+    });
     
     // Keyboard shortcuts
     document.addEventListener('keydown', function(event) {
         // Alt+V for voice
         if (event.altKey && event.key.toLowerCase() === 'v') {
             event.preventDefault();
-            if (voiceButton) voiceButton.click();
+            voiceButton.click();
         }
         
         // Alt+S for speech
         if (event.altKey && event.key.toLowerCase() === 's') {
             event.preventDefault();
-            if (speakButton) speakButton.click();
+            speakButton.click();
         }
         
         // Alt+R for reset
