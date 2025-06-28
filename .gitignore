@@ -1,0 +1,9 @@
+.idea/
+.vscode/
+__pycache__/
+.upm/
+.replit
+*.log
+*.id
+*.pyc
+.pythonlibs/
