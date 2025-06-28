@@ -32,8 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const nathan1Label = document.getElementById('nathan1Label');
     const nathan2Label = document.getElementById('nathan2Label');
     const nathan3Label = document.getElementById('nathan3Label');
-    const nathanProcessText = document.getElementById('nathanProcessText');
-    const nathanProcessButton = document.getElementById('nathanProcessButton');
     const nathanResult = document.getElementById('nathanResult');
     const nathanResultText = document.getElementById('nathanResultText');
     const nathan1 = document.getElementById('nathan1');
@@ -56,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nathanLabel1: 'Hora del reloj:',
             nathanLabel2: 'Tarjeta cantina:',
             nathanLabel3: 'Panel pared:',
-            nathanProcess: 'Procesar',
+
             nathanResultText: 'Código procesado: {0}'
         },
         en: {
@@ -68,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nathanLabel1: 'Clock hour:',
             nathanLabel2: 'Canteen card:',
             nathanLabel3: 'Wall panel:',
-            nathanProcess: 'Process',
+
             nathanResultText: 'Processed code: {0}'
         },
         pt: {
@@ -80,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nathanLabel1: 'Hora do relógio:',
             nathanLabel2: 'Cartão cantina:',
             nathanLabel3: 'Painel parede:',
-            nathanProcess: 'Processar',
+
             nathanResultText: 'Código processado: {0}'
         },
         it: {
@@ -92,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nathanLabel1: 'Ora orologio:',
             nathanLabel2: 'Carta mensa:',
             nathanLabel3: 'Pannello parete:',
-            nathanProcess: 'Elabora',
+
             nathanResultText: 'Codice elaborato: {0}'
         },
         fr: {
@@ -104,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nathanLabel1: 'Heure horloge:',
             nathanLabel2: 'Carte cantine:',
             nathanLabel3: 'Panneau mur:',
-            nathanProcess: 'Traiter',
+
             nathanResultText: 'Code traité: {0}'
         }
     };
@@ -328,11 +326,10 @@ document.addEventListener('DOMContentLoaded', function() {
         nathan1Label.textContent = t.nathanLabel1;
         nathan2Label.textContent = t.nathanLabel2;
         nathan3Label.textContent = t.nathanLabel3;
-        nathanProcessText.textContent = t.nathanProcess;
     }
     
-    // Nathan code functionality
-    nathanProcessButton.addEventListener('click', function() {
+    // Nathan code functionality - auto-process when all inputs are filled
+    function processNathanCode() {
         const val1 = parseInt(nathan1.value);
         const val2 = parseInt(nathan2.value);
         const val3 = parseInt(nathan3.value);
@@ -352,7 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nathanResult.classList.remove('d-none');
         
         console.log('Nathan code processed:', processedCode);
-    });
+    }
     
     // Input validation for Nathan fields
     [nathan1, nathan2, nathan3].forEach(input => {
@@ -361,8 +358,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (value < 1) this.value = 1;
             if (value > 9) this.value = 9;
             
-            // Hide result when inputs change
-            nathanResult.classList.add('d-none');
+            // Auto-process when all fields are filled
+            processNathanCode();
         });
         
         input.addEventListener('keypress', function(e) {
