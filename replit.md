@@ -107,6 +107,7 @@ Changelog:
 - June 27, 2025. Added text-to-speech functionality to read calculation results aloud
 - June 27, 2025. Enhanced keyboard navigation with tabindex, access keys, and keyboard shortcuts (Alt+V, Alt+S, Alt+R)
 - June 27, 2025. Fixed symbol grid layout to display all symbols completely without border cutoff
+- June 27, 2025. Added collapsible "Neidam code" section with three number inputs (1-9) and processing functionality
 
 ## User Preferences
 

@@ -32,6 +32,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const instructionText = document.getElementById('instructionText');
     const resultsTitle = document.getElementById('resultsTitle');
     
+    // Neidam code elements
+    const neidamToggle = document.getElementById('neidamToggle');
+    const neidamTitle = document.getElementById('neidamTitle');
+    const neidam1Label = document.getElementById('neidam1Label');
+    const neidam2Label = document.getElementById('neidam2Label');
+    const neidam3Label = document.getElementById('neidam3Label');
+    const neidamProcessText = document.getElementById('neidamProcessText');
+    const neidamProcessButton = document.getElementById('neidamProcessButton');
+    const neidamResult = document.getElementById('neidamResult');
+    const neidamResultText = document.getElementById('neidamResultText');
+    const neidam1 = document.getElementById('neidam1');
+    const neidam2 = document.getElementById('neidam2');
+    const neidam3 = document.getElementById('neidam3');
+    
     // Current state
     let currentVariable = 'X';
     let selectedValues = { X: null, Y: null, Z: null };
@@ -48,7 +62,13 @@ document.addEventListener('DOMContentLoaded', function() {
             reset: 'Reiniciar',
             listening: 'Escuchando...',
             voiceHelp: 'Di: "X símbolo 1" o "Y símbolo 3", etc.',
-            speechResults: 'Los resultados son: {0}, {1}, {2}'
+            speechResults: 'Los resultados son: {0}, {1}, {2}',
+            neidamTitle: 'Código Neidam:',
+            neidamLabel1: 'Número 1:',
+            neidamLabel2: 'Número 2:',
+            neidamLabel3: 'Número 3:',
+            neidamProcess: 'Procesar',
+            neidamResultText: 'Código procesado: {0}'
         },
         en: {
             title: 'Terminus Calculator',
@@ -57,7 +77,13 @@ document.addEventListener('DOMContentLoaded', function() {
             reset: 'Reset',
             listening: 'Listening...',
             voiceHelp: 'Say: "X symbol 1" or "Y symbol 3", etc.',
-            speechResults: 'The results are: {0}, {1}, {2}'
+            speechResults: 'The results are: {0}, {1}, {2}',
+            neidamTitle: 'Neidam code:',
+            neidamLabel1: 'Number 1:',
+            neidamLabel2: 'Number 2:',
+            neidamLabel3: 'Number 3:',
+            neidamProcess: 'Process',
+            neidamResultText: 'Processed code: {0}'
         },
         pt: {
             title: 'Calculadora Terminus',
@@ -66,7 +92,13 @@ document.addEventListener('DOMContentLoaded', function() {
             reset: 'Reiniciar',
             listening: 'Ouvindo...',
             voiceHelp: 'Diga: "X símbolo 1" ou "Y símbolo 3", etc.',
-            speechResults: 'Os resultados são: {0}, {1}, {2}'
+            speechResults: 'Os resultados são: {0}, {1}, {2}',
+            neidamTitle: 'Código Neidam:',
+            neidamLabel1: 'Número 1:',
+            neidamLabel2: 'Número 2:',
+            neidamLabel3: 'Número 3:',
+            neidamProcess: 'Processar',
+            neidamResultText: 'Código processado: {0}'
         },
         it: {
             title: 'Calcolatrice Terminus',
@@ -75,7 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
             reset: 'Reimposta',
             listening: 'In ascolto...',
             voiceHelp: 'Dì: "X simbolo 1" o "Y simbolo 3", ecc.',
-            speechResults: 'I risultati sono: {0}, {1}, {2}'
+            speechResults: 'I risultati sono: {0}, {1}, {2}',
+            neidamTitle: 'Codice Neidam:',
+            neidamLabel1: 'Numero 1:',
+            neidamLabel2: 'Numero 2:',
+            neidamLabel3: 'Numero 3:',
+            neidamProcess: 'Elabora',
+            neidamResultText: 'Codice elaborato: {0}'
         },
         fr: {
             title: 'Calculateur Terminus',
@@ -84,7 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
             reset: 'Réinitialiser',
             listening: 'Écoute...',
             voiceHelp: 'Dites: "X symbole 1" ou "Y symbole 3", etc.',
-            speechResults: 'Les résultats sont: {0}, {1}, {2}'
+            speechResults: 'Les résultats sont: {0}, {1}, {2}',
+            neidamTitle: 'Code Neidam:',
+            neidamLabel1: 'Numéro 1:',
+            neidamLabel2: 'Numéro 2:',
+            neidamLabel3: 'Numéro 3:',
+            neidamProcess: 'Traiter',
+            neidamResultText: 'Code traité: {0}'
         }
     };
     
@@ -303,6 +347,13 @@ document.addEventListener('DOMContentLoaded', function() {
         resetButton.textContent = t.reset;
         voiceStatusText.textContent = t.listening;
         
+        // Update Neidam section
+        neidamTitle.textContent = t.neidamTitle;
+        neidam1Label.textContent = t.neidamLabel1;
+        neidam2Label.textContent = t.neidamLabel2;
+        neidam3Label.textContent = t.neidamLabel3;
+        neidamProcessText.textContent = t.neidamProcess;
+        
         // Update button titles
         voiceButton.title = t.voiceHelp + ' (Alt+V)';
         speakButton.title = 'Leer resultados (Alt+S)';
@@ -505,6 +556,57 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     speakButton.addEventListener('click', speakResults);
+    
+    // Neidam code functionality
+    neidamProcessButton.addEventListener('click', function() {
+        const val1 = parseInt(neidam1.value);
+        const val2 = parseInt(neidam2.value);
+        const val3 = parseInt(neidam3.value);
+        
+        // Validate inputs
+        if (!val1 || !val2 || !val3 || val1 < 1 || val1 > 9 || val2 < 1 || val2 > 9 || val3 < 1 || val3 > 9) {
+            neidamResult.classList.add('d-none');
+            return;
+        }
+        
+        // Simple processing (concatenate the numbers for now)
+        const processedCode = `${val1}${val2}${val3}`;
+        
+        // Display result
+        const t = translations[currentLanguage];
+        neidamResultText.textContent = t.neidamResultText.replace('{0}', processedCode);
+        neidamResult.classList.remove('d-none');
+        
+        console.log('Neidam code processed:', processedCode);
+    });
+    
+    // Input validation for Neidam fields
+    [neidam1, neidam2, neidam3].forEach(input => {
+        input.addEventListener('input', function() {
+            let value = parseInt(this.value);
+            if (value < 1) this.value = 1;
+            if (value > 9) this.value = 9;
+            
+            // Hide result when inputs change
+            neidamResult.classList.add('d-none');
+        });
+        
+        input.addEventListener('keypress', function(e) {
+            // Only allow numbers 1-9
+            if (e.key < '1' || e.key > '9') {
+                e.preventDefault();
+            }
+        });
+    });
+    
+    // Toggle arrow direction when Neidam section is expanded/collapsed
+    document.getElementById('neidamCodeCollapse').addEventListener('show.bs.collapse', function() {
+        neidamToggle.querySelector('span').textContent = '▼';
+    });
+    
+    document.getElementById('neidamCodeCollapse').addEventListener('hide.bs.collapse', function() {
+        neidamToggle.querySelector('span').textContent = '▶';
+    });
     
     // Test speech button
     testSpeechButton.addEventListener('click', function() {
