@@ -8,37 +8,38 @@
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container-fluid mt-3">
+        <!-- Language Flags Row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="language-flags">
+                        <img src="https://flagcdn.com/w20/es.png" alt="Español" class="flag-icon active" data-lang="es" title="Español">
+                        <img src="https://flagcdn.com/w20/gb.png" alt="English" class="flag-icon" data-lang="en" title="English">
+                        <img src="https://flagcdn.com/w20/pt.png" alt="Português" class="flag-icon" data-lang="pt" title="Português">
+                        <img src="https://flagcdn.com/w20/it.png" alt="Italiano" class="flag-icon" data-lang="it" title="Italiano">
+                        <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="flag-icon" data-lang="fr" title="Français">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Title Row -->
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center mb-4" id="mainTitle">Calculadora Terminus</h1>
+            </div>
+        </div>
+        
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <div class="col-12 col-lg-10 col-xl-8">
                 <div class="card">
                     <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="language-flags">
-                                <img src="https://flagcdn.com/w20/es.png" alt="Español" class="flag-icon active" data-lang="es" title="Español">
-                                <img src="https://flagcdn.com/w20/gb.png" alt="English" class="flag-icon" data-lang="en" title="English">
-                                <img src="https://flagcdn.com/w20/pt.png" alt="Português" class="flag-icon" data-lang="pt" title="Português">
-                                <img src="https://flagcdn.com/w20/it.png" alt="Italiano" class="flag-icon" data-lang="it" title="Italiano">
-                                <img src="https://flagcdn.com/w20/fr.png" alt="Français" class="flag-icon" data-lang="fr" title="Français">
-                            </div>
-                            <h2 class="card-title mb-0 text-center flex-grow-1" id="mainTitle">Calculadora Terminus</h2>
-                            <div class="voice-controls">
-                                <button type="button" class="btn btn-sm btn-outline-light" id="voiceButton" title="Comando de voz (Alt+V)">
-                                    🎤
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-light" id="speakButton" title="Leer resultados (Alt+S)">
-                                    🔊
-                                </button>
-                                <button type="button" class="btn btn-sm btn-outline-warning" id="testSpeechButton" title="Probar voz">
-                                    🔊🧪
-                                </button>
-                            </div>
-                        </div>
+                        <h4 class="card-title mb-0 text-center" id="instructionText">Selecciona variable y su símbolo:</h4>
                     </div>
                     <div class="card-body">
                         <!-- Symbol Selection Interface -->
                         <div class="mb-4">
-                            <h5 class="mb-3 text-center" id="instructionText">Selecciona variable y su símbolo:</h5>
                             
                             <!-- Variable Selection Buttons -->
                             <div class="variable-selection mb-4">
@@ -111,44 +112,35 @@
                             <button type="button" class="btn btn-secondary" id="resetButton" tabindex="10" accesskey="r">Reiniciar</button>
                         </div>
                         
-                        <!-- Voice Status -->
-                        <div id="voiceStatus" class="text-center mt-2 d-none">
-                            <small class="text-muted" id="voiceStatusText">Escuchando...</small>
-                        </div>
-                        
-                        <!-- Neidam Code Section -->
+                        <!-- Nathan Code Section -->
                         <div class="mt-4">
-                            <div class="card border-secondary">
-                                <div class="card-header p-2">
-                                    <button class="btn btn-sm btn-outline-secondary w-100 text-start" type="button" data-bs-toggle="collapse" data-bs-target="#neidamCodeCollapse" aria-expanded="false" aria-controls="neidamCodeCollapse" id="neidamToggle">
-                                        <span class="me-2">▶</span><span id="neidamTitle">Código Neidam:</span>
-                                    </button>
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="mb-0" id="nathanTitle">Código Nathan:</h5>
                                 </div>
-                                <div class="collapse" id="neidamCodeCollapse">
-                                    <div class="card-body p-3">
-                                        <div class="row g-2">
-                                            <div class="col-4">
-                                                <label for="neidam1" class="form-label small" id="neidam1Label">Número 1:</label>
-                                                <input type="number" class="form-control" id="neidam1" min="1" max="9" placeholder="1-9">
-                                            </div>
-                                            <div class="col-4">
-                                                <label for="neidam2" class="form-label small" id="neidam2Label">Número 2:</label>
-                                                <input type="number" class="form-control" id="neidam2" min="1" max="9" placeholder="1-9">
-                                            </div>
-                                            <div class="col-4">
-                                                <label for="neidam3" class="form-label small" id="neidam3Label">Número 3:</label>
-                                                <input type="number" class="form-control" id="neidam3" min="1" max="9" placeholder="1-9">
-                                            </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label for="nathan1" class="form-label" id="nathan1Label">Hora del reloj:</label>
+                                            <input type="number" class="form-control" id="nathan1" min="1" max="9" placeholder="1-9">
                                         </div>
-                                        <div class="text-center mt-3">
-                                            <button type="button" class="btn btn-primary btn-sm" id="neidamProcessButton">
-                                                <span id="neidamProcessText">Procesar</span>
-                                            </button>
+                                        <div class="col-md-4">
+                                            <label for="nathan2" class="form-label" id="nathan2Label">Tarjeta cantina:</label>
+                                            <input type="number" class="form-control" id="nathan2" min="1" max="9" placeholder="1-9">
                                         </div>
-                                        <div id="neidamResult" class="mt-3 d-none">
-                                            <div class="alert alert-info">
-                                                <small id="neidamResultText"></small>
-                                            </div>
+                                        <div class="col-md-4">
+                                            <label for="nathan3" class="form-label" id="nathan3Label">Panel pared:</label>
+                                            <input type="number" class="form-control" id="nathan3" min="1" max="9" placeholder="1-9">
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-4">
+                                        <button type="button" class="btn btn-primary" id="nathanProcessButton">
+                                            <span id="nathanProcessText">Procesar</span>
+                                        </button>
+                                    </div>
+                                    <div id="nathanResult" class="mt-3 d-none">
+                                        <div class="alert alert-success">
+                                            <strong id="nathanResultText"></strong>
                                         </div>
                                     </div>
                                 </div>
